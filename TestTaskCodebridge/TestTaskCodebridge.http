@@ -1,0 +1,6 @@
+@TestTaskCodebridge_HostAddress = http://localhost:5243
+
+GET {{TestTaskCodebridge_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
