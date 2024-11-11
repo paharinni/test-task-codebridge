@@ -3,6 +3,7 @@ using TestTaskCodebridge.Database;
 using TestTaskCodebridge.Domain.Dtos;
 using TestTaskCodebridge.Domain.Mappers;
 using TestTaskCodebridge.Interfaces;
+using TestTaskCodebridge.Services.Helpers;
 
 namespace TestTaskCodebridge.Controllers;
 
@@ -20,9 +21,9 @@ public class DogController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
     {
-        var dogs = await _dogRepository.GetAllAsync();
+        var dogs = await _dogRepository.GetAllAsync(query);
         var dogDto = dogs.Select(d => d.ToDogDto());
 
         return Ok(dogs);
