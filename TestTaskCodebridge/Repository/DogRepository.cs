@@ -37,7 +37,9 @@ public class DogRepository : IDogRepository
             }
         }
 
-        return await dogs.ToListAsync();
+        var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+        return await dogs.Skip(skipNumber).Take(query.PageSize).ToListAsync();
     }
 
     public async Task<Dog?> GetByIdAsync(int id)
