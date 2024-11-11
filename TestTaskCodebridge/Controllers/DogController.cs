@@ -4,6 +4,7 @@ using TestTaskCodebridge.Database;
 using TestTaskCodebridge.Domain.Dtos;
 using TestTaskCodebridge.Domain.Entities;
 using TestTaskCodebridge.Domain.Mappers;
+using TestTaskCodebridge.Interfaces;
 
 namespace TestTaskCodebridge.Controllers;
 
@@ -12,18 +13,19 @@ namespace TestTaskCodebridge.Controllers;
 public class DogController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly IDogRepository _dogRepository;
 
-    public DogController(AppDbContext context)
+    public DogController(AppDbContext context, IDogRepository dogRepository)
     {
+        _dogRepository = dogRepository;
         _context = context;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var dogs = await _context.Dogs
-            .Select(d => d.ToDogDto())
-            .ToListAsync();
+        var dogs = await _dogRepository.GetAllAsync();
+        var dogDto = dogs.Select(d => d.ToDogDto());
 
         return Ok(dogs);
     }
@@ -31,7 +33,7 @@ public class DogController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var dog = await _context.Dogs.FindAsync(id);
+        var dog = await _dogRepository.GetByIdAsync(id);
 
         if (dog == null)
         {
@@ -45,9 +47,7 @@ public class DogController : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateDogRequestDto dogDto)
     {
         var dogModel = dogDto.ToDogFromCreateDto();
-        await _context.Dogs.AddAsync(dogModel);
-        await _context.SaveChangesAsync();
-    
+        await _dogRepository.CreateAsync(dogModel);
         return CreatedAtAction(nameof(GetById), new { id = dogModel.Id }, dogModel.ToDogDto());
     }
 
@@ -55,19 +55,12 @@ public class DogController : ControllerBase
     [Route("{id}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateDogRequestDto updateDto)
     {
-        var dogModel = await _context.Dogs.FirstOrDefaultAsync(x => x.Id == id);
+        var dogModel = await _dogRepository.UpdateAsync(id, updateDto);
         
         if (dogModel == null)
         {
             return NotFound();
         }
-
-        dogModel.Name = updateDto.Name;
-        dogModel.Color = updateDto.Color;
-        dogModel.Weight = updateDto.Weight;
-        dogModel.TailLength = updateDto.TailLength;
-
-        await _context.SaveChangesAsync();
 
         return Ok(dogModel.ToDogDto());
     }
@@ -76,15 +69,12 @@ public class DogController : ControllerBase
     [Route("{id}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var dogModel = await _context.Dogs.FirstOrDefaultAsync(x => x.Id == id);
-
+        var dogModel = await _dogRepository.DeleteAsync(id);
+            
         if (dogModel == null)
         {
             return NotFound();
         }
-
-        _context.Dogs.Remove(dogModel);
-        await _context.SaveChangesAsync();
 
         return NoContent();
     }
