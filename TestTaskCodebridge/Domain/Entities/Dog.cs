@@ -13,7 +13,7 @@ public class Dog
     [StringLength(20, ErrorMessage = "Color must be no longer than 20 characters.")]
     public string Color { get; set; } = string.Empty;
     [Range(0, 100, ErrorMessage = "Tail length must be be between 0 and 100cm")]
-    public int TailLength { get; set; }
+    public int Tail_Length { get; set; }
     [Range(0, 100000, ErrorMessage = "Weight must be between 0 and 100,000g")]
     public int Weight { get; set; }
 }

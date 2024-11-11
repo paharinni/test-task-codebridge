@@ -25,7 +25,6 @@ public class DogController : ControllerBase
     {
         var dogs = await _dogRepository.GetAllAsync(query);
         var dogDto = dogs.Select(d => d.ToDogDto());
-
         return Ok(dogs);
     }
     

@@ -12,7 +12,7 @@ public static class DogMappers
             Name = dogModel.Name,
             Color = dogModel.Color,
             Weight = dogModel.Weight,
-            TailLength = dogModel.TailLength
+            Tail_Length = dogModel.Tail_Length
         };
     }
 
@@ -23,7 +23,7 @@ public static class DogMappers
             Name = dogDto.Name,
             Color = dogDto.Color,
             Weight = dogDto.Weight,
-            TailLength = dogDto.TailLength
+            Tail_Length = dogDto.Tail_Length
         };
     }
 }

@@ -8,11 +8,11 @@ using TestTaskCodebridge.Database;
 
 #nullable disable
 
-namespace TestTaskCodebridge.Migrations
+namespace TestTaskCodebridge.Database.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241110213211_UpdatedColumns")]
-    partial class UpdatedColumns
+    [Migration("20241111120518_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,13 +34,15 @@ namespace TestTaskCodebridge.Migrations
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("TailLength")
+                    b.Property<int>("Tail_Length")
                         .HasColumnType("int");
 
                     b.Property<int>("Weight")

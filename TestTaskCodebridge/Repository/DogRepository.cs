@@ -76,7 +76,7 @@ public class DogRepository : IDogRepository
         existingDog.Name = dogDto.Name;
         existingDog.Color = dogDto.Color;
         existingDog.Weight = dogDto.Weight;
-        existingDog.TailLength = dogDto.TailLength;
+        existingDog.Tail_Length = dogDto.Tail_Length;
 
         await _context.SaveChangesAsync();
 
