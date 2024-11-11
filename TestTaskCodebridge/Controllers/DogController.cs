@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TestTaskCodebridge.Database;
 using TestTaskCodebridge.Domain.Dtos;
-using TestTaskCodebridge.Domain.Entities;
 using TestTaskCodebridge.Domain.Mappers;
 using TestTaskCodebridge.Interfaces;
 
@@ -30,7 +28,7 @@ public class DogController : ControllerBase
         return Ok(dogs);
     }
     
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         var dog = await _dogRepository.GetByIdAsync(id);
@@ -46,15 +44,25 @@ public class DogController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateDogRequestDto dogDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         var dogModel = dogDto.ToDogFromCreateDto();
         await _dogRepository.CreateAsync(dogModel);
         return CreatedAtAction(nameof(GetById), new { id = dogModel.Id }, dogModel.ToDogDto());
     }
 
     [HttpPut]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateDogRequestDto updateDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         var dogModel = await _dogRepository.UpdateAsync(id, updateDto);
         
         if (dogModel == null)
@@ -66,9 +74,14 @@ public class DogController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         var dogModel = await _dogRepository.DeleteAsync(id);
             
         if (dogModel == null)

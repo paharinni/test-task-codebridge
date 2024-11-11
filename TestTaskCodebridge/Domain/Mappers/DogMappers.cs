@@ -9,7 +9,6 @@ public static class DogMappers
     {
         return new DogDto()
         {
-            Id = dogModel.Id,
             Name = dogModel.Name,
             Color = dogModel.Color,
             Weight = dogModel.Weight,
